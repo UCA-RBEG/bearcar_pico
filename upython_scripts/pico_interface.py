@@ -9,7 +9,7 @@ from time import sleep
 from machine import freq, reset
 from action.drivetrain import Drivetrain
 from action.illuminator import Illuminator
-from perception.inertial_sensor import MPU6050
+# from perception.inertial_sensor import MPU6050
 
 # SETUP
 # Overclock
@@ -18,28 +18,28 @@ freq(240_000_000)  # Pico 2 original: 150_000_000
 rgb_led = Illuminator(red_pin_id=21, green_pin_id=20, blue_pin_id=19)
 rgb_led.glow("s")  # standby
 driver = Drivetrain(steering_pin_id=16, throttle_pin_id=17)
-imu = MPU6050(i2c_channel=1, scl_id=15, sda_id=14, i2c_addr=0x68)
+# imu = MPU6050(i2c_channel=1, scl_id=15, sda_id=14, i2c_addr=0x68)
 # Config USB messenger
 messenger = select.poll()
 messenger.register(sys.stdin, select.POLLIN)
 # Constants
-tx_period_us = 16_667  # 60 Hz
+# tx_period_us = 16_667  # 60 Hz
 rx_timeout_us = 500_000  # 0.5 seconds
 # print("Pico is ready...")  # debug
 
 # LOOP
-last_tx_us = ticks_us()
+# last_tx_us = ticks_us()
 last_rx_us = ticks_us()
 try:
     while True:
-        # Transmit data (TX)
         now_us = ticks_us()
-        if ticks_diff(now_us, last_tx_us) >= tx_period_us:
-            # Extract angular velocity on z
-            motion_data = imu.read_data()
-            out_msg = f"{motion_data['lin_acc_x']:.2f}, {motion_data['lin_acc_y']:.2f}, {motion_data['lin_acc_z']:.2f}, {motion_data['ang_vel_x']:.2f}, {motion_data['ang_vel_y']:.2f}, {motion_data['ang_vel_z']:.2f}"
-            print(out_msg)  # main.py will send this to computer
-            last_tx_us = now_us  # update last time stamp
+        # Transmit data (TX)
+        # if ticks_diff(now_us, last_tx_us) >= tx_period_us:
+        #     # Extract angular velocity on z
+        #     motion_data = imu.read_data()
+        #     out_msg = f"{motion_data['lin_acc_x']:.2f}, {motion_data['lin_acc_y']:.2f}, {motion_data['lin_acc_z']:.2f}, {motion_data['ang_vel_x']:.2f}, {motion_data['ang_vel_y']:.2f}, {motion_data['ang_vel_z']:.2f}"
+        #     print(out_msg)  # main.py will send this to computer
+        #     last_tx_us = now_us  # update last time stamp
         # Receive data (RX)
         is_waiting = messenger.poll(0)  # check data in USB
         if is_waiting:
